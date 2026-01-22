@@ -38,22 +38,112 @@
             font-weight: 600;
         }
 
-        /* 表单容器 */
-        .form-container {
-            background-color: white;
+        /* 主页按钮组 */
+        .btn-group {
+            display: flex;
+            gap: 10px;
             margin: 15px;
-            padding: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* 录入按钮 */
+        .add-student-btn {
+            flex: 2;
+            min-width: 120px;
+            padding: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
             border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
-        .form-title {
+        .add-student-btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* 清除数据按钮 */
+        .clear-data-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 16px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .clear-data-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* 课程预设管理按钮 */
+        .course-setting-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 16px;
+            background-color: #9b59b6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .course-setting-btn:hover {
+            background-color: #8e44ad;
+        }
+
+        /* 表单弹窗样式 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        .modal-title {
             font-size: 16px;
             color: #2c3e50;
             margin-bottom: 15px;
             font-weight: 600;
             border-left: 3px solid #e74c3c;
             padding-left: 10px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
         }
 
         /* 表单项样式 */
@@ -83,51 +173,14 @@
             border-color: #3498db;
         }
 
-        /* 标签选择样式 */
-        .tag-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 5px;
-        }
-
-        .tag-item {
-            flex: 1;
-            min-width: 80px;
-        }
-
-        .tag-item input {
-            display: none;
-        }
-
-        .tag-item label {
-            display: block;
-            text-align: center;
-            padding: 10px;
+        /* 自定义课程类型输入框样式 */
+        .course-input {
+            width: 100%;
+            padding: 12px 10px;
             border: 1px solid #ddd;
             border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 0;
-        }
-
-        /* 不同标签的颜色 */
-        #tag-strong:checked+label {
-            background-color: #27ae60;
-            color: white;
-            border-color: #27ae60;
-        }
-
-        #tag-medium:checked+label {
-            background-color: #f39c12;
-            color: white;
-            border-color: #f39c12;
-        }
-
-        #tag-none:checked+label {
-            background-color: #e74c3c;
-            color: white;
-            border-color: #e74c3c;
+            font-size: 14px;
+            outline: none;
         }
 
         /* 提交按钮 */
@@ -219,37 +272,196 @@
             line-height: 1.6;
         }
 
-        .student-tag {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            color: white;
-            margin-top: 8px;
+        /* 操作按钮组 */
+        .action-btns {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
         }
 
-        .tag-strong {
-            background-color: #27ae60;
-        }
-
-        .tag-medium {
-            background-color: #f39c12;
-        }
-
-        .tag-none {
-            background-color: #e74c3c;
-        }
-
-        /* 删除按钮 */
+        /* 删除按钮 - 优化样式更醒目 */
         .delete-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            padding: 4px 8px;
+            padding: 6px 10px;
             background-color: #e74c3c;
             color: white;
             border: none;
             border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* 添加上课记录按钮 */
+        .add-class-btn {
+            padding: 6px 10px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .add-class-btn:hover {
+            background-color: #219653;
+        }
+
+        /* 新增：修改学员信息按钮 */
+        .edit-student-btn {
+            padding: 6px 10px;
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .edit-student-btn:hover {
+            background-color: #e67e22;
+        }
+
+        /* 上课记录弹窗 */
+        .class-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        /* 上课记录展示 */
+        .class-records {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #ddd;
+        }
+
+        .class-record-item {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        /* 统计区域 */
+        .stat-container {
+            background-color: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stat-filter select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .stat-btn {
+            padding: 0 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .stat-result {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .stat-item {
+            font-size: 14px;
+            color: #34495e;
+            margin-bottom: 8px;
+        }
+
+        /* 所有学员统计的子项样式 */
+        .all-student-item {
+            margin-left: 15px;
+            margin-top: 8px;
+            padding-left: 10px;
+            border-left: 2px solid #ddd;
+        }
+
+        /* 课程预设列表样式 */
+        .course-list {
+            margin: 15px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .course-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .course-item:last-child {
+            border-bottom: none;
+        }
+
+        .course-name {
+            font-size: 14px;
+            color: #34495e;
+        }
+
+        .course-item-btn {
+            display: flex;
+            gap: 5px;
+        }
+
+        .edit-course-btn {
+            padding: 3px 6px;
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .remove-course-btn {
+            padding: 3px 6px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 3px;
             font-size: 12px;
             cursor: pointer;
         }
@@ -259,13 +471,6 @@
             font-size: 12px;
             color: #999;
             margin-top: 5px;
-        }
-
-        .error-tip {
-            color: #e74c3c;
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
         }
 
         /* 空列表提示 */
@@ -281,74 +486,22 @@
 <body>
     <!-- 头部 -->
     <header>
-        <h1>画室试听学员管理系统</h1>
+        <h1>雪梨老师专属学员管理系统</h1>
     </header>
 
-    <!-- 信息录入表单 -->
-    <div class="form-container">
-        <div class="form-title">试听学员信息录入</div>
-        <div class="form-item">
-            <label for="name">学员姓名 <span style="color: #e74c3c;">*</span></label>
-            <input type="text" id="name" placeholder="请输入学员姓名">
-        </div>
-        <div class="form-item">
-            <label for="phone">手机号码 <span style="color: #e74c3c;">*</span></label>
-            <input type="tel" id="phone" placeholder="请输入11位手机号码">
-            <div class="error-tip" id="phone-error">该手机号已录入，请勿重复添加</div>
-        </div>
-        <div class="form-item">
-            <label for="age">学员年龄</label>
-            <input type="number" id="age" placeholder="请输入学员年龄">
-        </div>
-        <div class="form-item">
-            <label for="gender">性别</label>
-            <select id="gender">
-                <option value="">请选择</option>
-                <option value="男">男</option>
-                <option value="女">女</option>
-            </select>
-        </div>
-        <div class="form-item">
-            <label for="course">试听课程 <span style="color: #e74c3c;">*</span></label>
-            <select id="course">
-                <option value="">请选择</option>
-                <option value="涂鸦">涂鸦</option>
-                <option value="感知">感知</option>
-                <option value="水粉">水粉</option>
-                <option value="素描">素描</option>
-                <option value="其他">其他</option>
-            </select>
-        </div>
-        <div class="form-item">
-            <label for="date">试听日期 <span style="color: #e74c3c;">*</span></label>
-            <input type="date" id="date">
-        </div>
-        <div class="form-item">
-            <label>交钱意愿 <span style="color: #e74c3c;">*</span></label>
-            <div class="tag-group">
-                <div class="tag-item">
-                    <input type="radio" name="tag" id="tag-strong" value="强烈">
-                    <label for="tag-strong">意愿强烈</label>
-                </div>
-                <div class="tag-item">
-                    <input type="radio" name="tag" id="tag-medium" value="中等">
-                    <label for="tag-medium">意愿中等</label>
-                </div>
-                <div class="tag-item">
-                    <input type="radio" name="tag" id="tag-none" value="不愿">
-                    <label for="tag-none">不愿交钱</label>
-                </div>
-            </div>
-        </div>
-        <button class="submit-btn" onclick="saveStudent()">提交信息</button>
+    <!-- 主页按钮组（录入+清除数据+课程预设管理） -->
+    <div class="btn-group">
+        <button class="add-student-btn" onclick="openAddStudentModal()">录入学员信息</button>
+        <button class="clear-data-btn" onclick="clearAllData()">清除所有数据</button>
+        <button class="course-setting-btn" onclick="openCourseSettingModal()">课程预设管理</button>
     </div>
 
     <!-- 学员列表展示 -->
     <div class="list-container">
         <div class="list-title">已录入学员列表</div>
-        <!-- 新增查询框 -->
+        <!-- 查询框 -->
         <div class="search-box">
-            <input type="text" class="search-input" id="search-key" placeholder="输入姓名/手机号查询">
+            <input type="text" class="search-input" id="search-key" placeholder="输入姓名/小名/手机号查询">
             <button class="search-btn" onclick="searchStudent()">查询</button>
             <button class="reset-btn" onclick="resetSearch()">重置</button>
         </div>
@@ -357,29 +510,285 @@
         </div>
     </div>
 
-    <script>
-        // 从本地存储获取学员数据，没有则初始化空数组
-        let studentList = JSON.parse(localStorage.getItem('artStudioStudents')) || [];
-        // 保存原始列表，用于重置查询
-        let originalStudentList = [...studentList];
+    <!-- 统计区域 -->
+    <div class="stat-container">
+        <div class="list-title">学员上课统计</div>
+        <div class="stat-filter">
+            <select id="stat-student">
+                <option value="">所有学员</option>
+            </select>
+            <select id="stat-month">
+                <option value="">请选择月份</option>
+            </select>
+            <button class="stat-btn" onclick="getStatistic()">统计</button>
+        </div>
+        <div id="stat-result" class="stat-result" style="display: none;">
+        </div>
+    </div>
 
-        // 页面加载时渲染学员列表
+    <!-- 学员信息录入/修改弹窗 -->
+    <div class="modal" id="add-student-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAddStudentModal()">&times;</span>
+            <div class="modal-title" id="student-modal-title">学员信息录入</div>
+            <!-- 新增：存储当前修改的学员ID -->
+            <input type="hidden" id="edit-student-id" value="-1">
+            <div class="form-item">
+                <label for="name">学员姓名 <span style="color: #e74c3c;">*</span></label>
+                <input type="text" id="name" placeholder="请输入学员姓名">
+            </div>
+            <div class="form-item">
+                <label for="nickname">学员小名</label>
+                <input type="text" id="nickname" placeholder="请输入学员小名（可选）">
+            </div>
+            <div class="form-item">
+                <label for="phone">手机号码 <span style="color: #e74c3c;">*</span></label>
+                <input type="tel" id="phone" placeholder="请输入11位手机号码">
+            </div>
+            <div class="form-item">
+                <label for="age">学员年龄</label>
+                <input type="number" id="age" placeholder="请输入学员年龄">
+            </div>
+            <div class="form-item">
+                <label for="gender">性别</label>
+                <select id="gender">
+                    <option value="">请选择</option>
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+            <!-- 动态课程类型输入框 -->
+            <div class="form-item">
+                <label for="course">课程类型 <span style="color: #e74c3c;">*</span></label>
+                <input list="course-options" type="text" id="course" class="course-input"
+                    placeholder="输入课程类型（可选择预设/自定义）">
+                <datalist id="course-options">
+                    <!-- 动态生成预设选项 -->
+                </datalist>
+                <div class="tip">提示：可直接输入自定义课程类型，也可选择下拉预设选项</div>
+            </div>
+            <button class="submit-btn" onclick="saveStudent()">提交信息</button>
+        </div>
+    </div>
+
+    <!-- 上课记录弹窗 -->
+    <div class="class-modal" id="class-modal">
+        <div class="modal-content" style="position: relative;">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-title">添加上课记录</div>
+            <input type="hidden" id="current-student-id">
+            <div class="form-item">
+                <label for="class-date">上课日期 <span style="color: #e74c3c;">*</span></label>
+                <input type="date" id="class-date">
+            </div>
+            <!-- 动态上课课程输入框 -->
+            <div class="form-item">
+                <label for="class-name">上课课程 <span style="color: #e74c3c;">*</span></label>
+                <input list="class-options" type="text" id="class-name" class="course-input"
+                    placeholder="输入上课课程（可选择预设/自定义）">
+                <datalist id="class-options">
+                    <!-- 动态生成预设选项 -->
+                </datalist>
+                <div class="tip">提示：可直接输入自定义课程名称，也可选择下拉预设选项</div>
+            </div>
+            <button class="confirm-btn submit-btn" onclick="saveClassRecord()">确认添加</button>
+        </div>
+    </div>
+
+    <!-- 课程预设管理弹窗 -->
+    <div class="modal" id="course-setting-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeCourseSettingModal()">&times;</span>
+            <div class="modal-title">课程预设管理（增删改）</div>
+            <div class="form-item">
+                <label for="new-course-name">新增/修改课程名称</label>
+                <input type="text" id="new-course-name" placeholder="输入课程名称（如：少儿涂鸦）">
+                <input type="hidden" id="edit-course-index" value="-1">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="submit-btn" style="flex:1" onclick="saveCourseSetting()">保存课程</button>
+                <button class="submit-btn" style="flex:1; background-color: #95a5a6;"
+                    onclick="cancelEditCourse()">取消编辑</button>
+            </div>
+
+            <div class="list-title" style="margin-top:20px;">当前预设课程列表</div>
+            <div class="course-list" id="course-list">
+                <div class="empty-tip">暂无预设课程，请添加</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 从本地存储获取数据
+        let studentList = JSON.parse(localStorage.getItem('artStudioStudents')) || [];
+        let coursePresetList = JSON.parse(localStorage.getItem('coursePresetList')) || ['涂鸦', '感知', '其他'];
+        let originalStudentList = [...studentList];
+        let editCourseIndex = -1; // 编辑课程的索引，-1表示新增
+
+        // 页面加载初始化
         window.onload = function () {
             renderStudentList();
+            initStatOptions();
+            renderCoursePreset(); // 渲染课程预设到下拉框和管理列表
         };
 
-        // 保存学员信息
+        // ---------------------- 课程预设管理核心功能 ----------------------
+        // 渲染课程预设到下拉框和管理列表
+        function renderCoursePreset() {
+            const courseOptions = document.getElementById('course-options');
+            const classOptions = document.getElementById('class-options');
+            const courseList = document.getElementById('course-list');
+
+            // 渲染下拉框选项
+            courseOptions.innerHTML = '';
+            classOptions.innerHTML = '';
+            coursePresetList.forEach(course => {
+                courseOptions.innerHTML += `<option value="${course}"></option>`;
+                classOptions.innerHTML += `<option value="${course}"></option>`;
+            });
+
+            // 渲染管理列表
+            if (coursePresetList.length === 0) {
+                courseList.innerHTML = '<div class="empty-tip">暂无预设课程，请添加</div>';
+                return;
+            }
+
+            let html = '';
+            coursePresetList.forEach((course, index) => {
+                html += `
+                    <div class="course-item">
+                        <span class="course-name">${course}</span>
+                        <div class="course-item-btn">
+                            <button class="edit-course-btn" onclick="editCourse(${index})">修改</button>
+                            <button class="remove-course-btn" onclick="removeCourse(${index})">删除</button>
+                        </div>
+                    </div>
+                `;
+            });
+            courseList.innerHTML = html;
+
+            // 保存到本地存储
+            localStorage.setItem('coursePresetList', JSON.stringify(coursePresetList));
+        }
+
+        // 打开课程预设管理弹窗
+        function openCourseSettingModal() {
+            document.getElementById('course-setting-modal').style.display = 'flex';
+            cancelEditCourse(); // 重置编辑状态
+        }
+
+        // 关闭课程预设管理弹窗
+        function closeCourseSettingModal() {
+            document.getElementById('course-setting-modal').style.display = 'none';
+        }
+
+        // 编辑课程
+        function editCourse(index) {
+            editCourseIndex = index;
+            document.getElementById('new-course-name').value = coursePresetList[index];
+            document.getElementById('edit-course-index').value = index;
+        }
+
+        // 取消编辑
+        function cancelEditCourse() {
+            editCourseIndex = -1;
+            document.getElementById('new-course-name').value = '';
+            document.getElementById('edit-course-index').value = '-1';
+        }
+
+        // 保存课程（新增/修改）
+        function saveCourseSetting() {
+            const courseName = document.getElementById('new-course-name').value.trim();
+            if (!courseName) {
+                alert('请输入课程名称！');
+                return;
+            }
+
+            // 去重校验
+            if (coursePresetList.includes(courseName) && editCourseIndex === -1) {
+                alert('该课程已存在！');
+                return;
+            }
+
+            if (editCourseIndex === -1) {
+                // 新增课程
+                coursePresetList.push(courseName);
+                alert('课程添加成功！');
+            } else {
+                // 修改课程
+                coursePresetList[editCourseIndex] = courseName;
+                alert('课程修改成功！');
+            }
+
+            // 刷新渲染
+            renderCoursePreset();
+            cancelEditCourse();
+        }
+
+        // 删除课程
+        function removeCourse(index) {
+            if (!confirm(`确定要删除课程【${coursePresetList[index]}】吗？`)) {
+                return;
+            }
+            coursePresetList.splice(index, 1);
+            renderCoursePreset();
+            alert('课程删除成功！');
+        }
+
+        // ---------------------- 学员管理核心功能（新增+修改） ----------------------
+        // 打开新增学员弹窗
+        function openAddStudentModal() {
+            // 重置弹窗状态为「新增」
+            document.getElementById('student-modal-title').innerText = '学员信息录入';
+            document.getElementById('edit-student-id').value = '-1';
+            // 清空表单
+            document.querySelectorAll('.form-item input, .form-item select').forEach(el => {
+                el.value = '';
+            });
+            document.getElementById('add-student-modal').style.display = 'flex';
+        }
+
+        // 新增：打开修改学员弹窗
+        function openEditStudentModal(studentId) {
+            // 设置弹窗状态为「修改」
+            document.getElementById('student-modal-title').innerText = '修改学员信息';
+            document.getElementById('edit-student-id').value = studentId;
+
+            // 查找对应学员并回显数据
+            const student = studentList.find(item => item.id === studentId);
+            if (!student) {
+                alert('学员信息不存在！');
+                return;
+            }
+
+            // 回显数据到表单
+            document.getElementById('name').value = student.name;
+            document.getElementById('nickname').value = student.nickname === '未填写' ? '' : student.nickname;
+            document.getElementById('phone').value = student.phone;
+            document.getElementById('age').value = student.age === '未填写' ? '' : student.age;
+            document.getElementById('gender').value = student.gender === '未填写' ? '' : student.gender;
+            document.getElementById('course').value = student.course;
+
+            // 打开弹窗
+            document.getElementById('add-student-modal').style.display = 'flex';
+        }
+
+        // 关闭学员弹窗（新增/修改通用）
+        function closeAddStudentModal() {
+            document.getElementById('add-student-modal').style.display = 'none';
+        }
+
+        // 保存学员信息（新增+修改通用）
         function saveStudent() {
-            // 获取表单数据
+            const editStudentId = parseInt(document.getElementById('edit-student-id').value);
             const name = document.getElementById('name').value.trim();
+            const nickname = document.getElementById('nickname').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const age = document.getElementById('age').value.trim();
             const gender = document.getElementById('gender').value;
-            const course = document.getElementById('course').value;
-            const date = document.getElementById('date').value;
-            const tag = document.querySelector('input[name="tag"]:checked')?.value;
+            const course = document.getElementById('course').value.trim();
 
-            // 校验必填项
+            // 基础校验
             if (!name) {
                 alert('请输入学员姓名！');
                 return;
@@ -389,129 +798,321 @@
                 return;
             }
             if (!course) {
-                alert('请选择试听课程！');
-                return;
-            }
-            if (!date) {
-                alert('请选择试听日期！');
-                return;
-            }
-            if (!tag) {
-                alert('请选择交钱意愿标签！');
+                alert('请输入课程类型！');
                 return;
             }
 
-            // 校验手机号是否重复（核心防重复逻辑）
-            const isRepeat = studentList.some(item => item.phone === phone);
-            if (isRepeat) {
-                document.getElementById('phone-error').style.display = 'block';
-                return;
+            if (editStudentId === -1) {
+                // 新增学员逻辑
+                const student = {
+                    id: Date.now(),
+                    name,
+                    nickname: nickname || '未填写',
+                    phone,
+                    age: age || '未填写',
+                    gender: gender || '未填写',
+                    course,
+                    classRecords: []
+                };
+
+                studentList.push(student);
+                alert('学员信息录入成功！');
             } else {
-                document.getElementById('phone-error').style.display = 'none';
+                // 修改学员逻辑
+                const studentIndex = studentList.findIndex(item => item.id === editStudentId);
+                if (studentIndex === -1) {
+                    alert('学员信息不存在！');
+                    return;
+                }
+
+                // 保留原有上课记录，更新基础信息
+                studentList[studentIndex] = {
+                    ...studentList[studentIndex],
+                    name,
+                    nickname: nickname || '未填写',
+                    phone,
+                    age: age || '未填写',
+                    gender: gender || '未填写',
+                    course
+                };
+                alert('学员信息修改成功！');
             }
 
-            // 构造学员对象
-            const student = {
-                id: Date.now(), // 用时间戳作为唯一ID
-                name,
-                phone,
-                age: age || '未填写',
-                gender: gender || '未填写',
-                course,
-                date,
-                tag
-            };
-
-            // 添加到列表并保存到本地存储
-            studentList.push(student);
-            originalStudentList = [...studentList]; // 更新原始列表
+            // 同步数据并刷新页面
+            originalStudentList = [...studentList];
             localStorage.setItem('artStudioStudents', JSON.stringify(studentList));
-
-            // 重新渲染列表
             renderStudentList();
-
-            // 重置表单
-            document.querySelectorAll('.form-item input, .form-item select').forEach(el => {
-                if (el.type === 'radio') el.checked = false;
-                else el.value = '';
-            });
-
-            alert('学员信息录入成功！');
+            initStatOptions();
+            closeAddStudentModal();
         }
 
-        // 渲染学员列表
+        // 渲染学员列表（新增修改按钮）
         function renderStudentList(list = studentList) {
             const listEl = document.getElementById('student-list');
-
-            // 无数据时显示提示
             if (list.length === 0) {
                 listEl.innerHTML = '<div class="empty-tip">暂无匹配的学员信息</div>';
                 return;
             }
 
-            // 拼接学员卡片HTML（新增删除按钮）
             let html = '';
             list.forEach(student => {
-                // 根据标签设置不同的样式类
-                let tagClass = '';
-                if (student.tag === '强烈') tagClass = 'tag-strong';
-                else if (student.tag === '中等') tagClass = 'tag-medium';
-                else tagClass = 'tag-none';
+                let recordsHtml = '';
+                if (student.classRecords && student.classRecords.length > 0) {
+                    recordsHtml = `
+                        <div class="class-records">
+                            <p style="font-size:12px;color:#666;margin-bottom:5px;"><strong>上课记录：</strong></p>
+                            ${student.classRecords.map(record => `
+                                <div class="class-record-item">
+                                    ${record.classDate} - ${record.className}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
 
                 html += `
                     <div class="student-card" data-id="${student.id}">
-                        <button class="delete-btn" onclick="deleteStudent(${student.id})">删除</button>
                         <div class="student-info">
                             <p><strong>姓名：</strong>${student.name}</p>
+                            <p><strong>小名：</strong>${student.nickname}</p>
                             <p><strong>手机号：</strong>${student.phone}</p>
                             <p><strong>年龄/性别：</strong>${student.age}/${student.gender}</p>
-                            <p><strong>试听课程：</strong>${student.course}</p>
-                            <p><strong>试听日期：</strong>${student.date}</p>
-                            <span class="student-tag ${tagClass}">交钱意愿：${student.tag}</span>
+                            <p><strong>课程类型：</strong>${student.course}</p>
+                            ${recordsHtml}
+                            <div class="action-btns">
+                                <button class="edit-student-btn" onclick="openEditStudentModal(${student.id})">修改信息</button>
+                                <button class="add-class-btn" onclick="openClassModal(${student.id})">添加上课记录</button>
+                                <button class="delete-btn" onclick="deleteSpecifiedStudent(${student.id})">删除该学员</button>
+                            </div>
                         </div>
                     </div>
                 `;
             });
-
             listEl.innerHTML = html;
         }
 
-        // 新增：查询学员功能
+        // 删除指定学员
+        function deleteSpecifiedStudent(studentId) {
+            const student = studentList.find(item => item.id === studentId);
+            if (!student) {
+                alert('该学员信息不存在！');
+                return;
+            }
+
+            if (!confirm(`确定要删除学员【${student.name}（${student.nickname}）】的所有信息吗？`)) {
+                return;
+            }
+
+            studentList = studentList.filter(student => student.id !== studentId);
+            originalStudentList = [...studentList];
+            localStorage.setItem('artStudioStudents', JSON.stringify(studentList));
+            renderStudentList();
+            initStatOptions();
+            alert(`学员【${student.name}】信息已删除！`);
+        }
+
+        // 清除所有数据
+        function clearAllData() {
+            if (!confirm('⚠️ 警告：此操作将删除所有学员信息和上课记录，且无法恢复！')) return;
+            if (!confirm('再次确认：是否真的要清除所有数据？')) return;
+
+            studentList = [];
+            originalStudentList = [];
+            localStorage.removeItem('artStudioStudents');
+            renderStudentList();
+            initStatOptions();
+            alert('所有数据已清除！');
+        }
+
+        // 搜索学员
         function searchStudent() {
             const key = document.getElementById('search-key').value.trim().toLowerCase();
             if (!key) {
-                alert('请输入查询关键词（姓名/手机号）！');
+                alert('请输入查询关键词！');
                 return;
             }
-            // 按姓名或手机号模糊匹配
             const filteredList = originalStudentList.filter(student =>
                 student.name.toLowerCase().includes(key) ||
+                student.nickname.toLowerCase().includes(key) ||
                 student.phone.includes(key)
             );
-            // 渲染筛选后的列表
             renderStudentList(filteredList);
         }
 
-        // 新增：重置查询（恢复全部列表）
+        // 重置搜索
         function resetSearch() {
             document.getElementById('search-key').value = '';
             renderStudentList(originalStudentList);
         }
 
-        // 新增：删除学员功能
-        function deleteStudent(studentId) {
-            // 二次确认，防止误删
-            if (!confirm('确定要删除该学员信息吗？删除后无法恢复！')) {
+        // 打开上课记录弹窗
+        function openClassModal(studentId) {
+            document.getElementById('current-student-id').value = studentId;
+            document.getElementById('class-modal').style.display = 'flex';
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('class-date').value = today;
+        }
+
+        // 关闭上课记录弹窗
+        function closeModal() {
+            document.getElementById('class-modal').style.display = 'none';
+            document.getElementById('class-date').value = '';
+            document.getElementById('class-name').value = '';
+        }
+
+        // 保存上课记录
+        function saveClassRecord() {
+            const studentId = parseInt(document.getElementById('current-student-id').value);
+            const classDate = document.getElementById('class-date').value;
+            const className = document.getElementById('class-name').value.trim();
+
+            if (!classDate) {
+                alert('请选择上课日期！');
                 return;
             }
-            // 过滤掉要删除的学员
-            studentList = studentList.filter(student => student.id !== studentId);
-            originalStudentList = [...studentList]; // 更新原始列表
-            // 保存到本地存储
+            if (!className) {
+                alert('请输入上课课程！');
+                return;
+            }
+
+            const student = studentList.find(item => item.id === studentId);
+            if (!student) {
+                alert('学员信息不存在！');
+                closeModal();
+                return;
+            }
+
+            student.classRecords.push({
+                id: Date.now(),
+                classDate,
+                className
+            });
+
             localStorage.setItem('artStudioStudents', JSON.stringify(studentList));
-            // 重新渲染列表
+            originalStudentList = [...studentList];
             renderStudentList();
-            alert('学员信息已删除！');
+            initStatOptions();
+            closeModal();
+            alert('上课记录添加成功！');
+        }
+
+        // 初始化统计下拉选项
+        function initStatOptions() {
+            const studentSelect = document.getElementById('stat-student');
+            const monthSelect = document.getElementById('stat-month');
+
+            studentSelect.innerHTML = '<option value="">所有学员</option>';
+            studentList.forEach(student => {
+                studentSelect.innerHTML += `<option value="${student.id}">${student.name}（${student.nickname}）(${student.phone})</option>`;
+            });
+
+            monthSelect.innerHTML = '<option value="">请选择月份</option>';
+            const now = new Date();
+            for (let i = 0; i < 12; i++) {
+                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                monthSelect.innerHTML += `<option value="${year}-${month}">${year}年${month}月</option>`;
+            }
+        }
+
+        // 获取统计数据
+        function getStatistic() {
+            const studentId = document.getElementById('stat-student').value;
+            const month = document.getElementById('stat-month').value;
+            const statResult = document.getElementById('stat-result');
+
+            if (!month) {
+                alert('请选择要统计的月份！');
+                return;
+            }
+
+            let html = '';
+            let totalClassCount = 0;
+            let totalCourseCount = {};
+
+            if (!studentId) {
+                html += `
+                    <div class="stat-item"><strong>统计范围：</strong>所有学员</div>
+                    <div class="stat-item"><strong>统计月份：</strong>${month.replace('-', '年')}月</div>
+                    <div class="stat-item"><strong>各学员上课明细：</strong></div>
+                `;
+
+                let hasRecord = false;
+                studentList.forEach(student => {
+                    const monthRecords = student.classRecords.filter(record => record.classDate.startsWith(month));
+                    if (monthRecords.length > 0) {
+                        hasRecord = true;
+                        totalClassCount += monthRecords.length;
+                        const courseCount = {};
+                        monthRecords.forEach(record => {
+                            courseCount[record.className] = (courseCount[record.className] || 0) + 1;
+                            totalCourseCount[record.className] = (totalCourseCount[record.className] || 0) + 1;
+                        });
+
+                        html += `
+                            <div class="all-student-item">
+                                <div class="stat-item"><strong>▪ ${student.name}（${student.nickname}）</strong>：共${monthRecords.length}次</div>
+                        `;
+                        for (const [course, count] of Object.entries(courseCount)) {
+                            html += `<div class="stat-item">  - ${course}：${count}次</div>`;
+                        }
+                        html += `</div>`;
+                    }
+                });
+
+                html += `
+                    <div class="stat-item" style="margin-top:15px;border-top:1px solid #ddd;padding-top:10px;"><strong>当月总上课次数：</strong>${totalClassCount}次</div>
+                    <div class="stat-item"><strong>当月课程汇总：</strong></div>
+                `;
+
+                if (Object.keys(totalCourseCount).length === 0) {
+                    html += '<div class="stat-item">本月所有学员暂无上课记录</div>';
+                } else {
+                    for (const [course, count] of Object.entries(totalCourseCount)) {
+                        html += `<div class="stat-item"> - ${course}：${count}次</div>`;
+                    }
+                }
+
+                if (!hasRecord) {
+                    html = `
+                        <div class="stat-item"><strong>统计范围：</strong>所有学员</div>
+                        <div class="stat-item"><strong>统计月份：</strong>${month.replace('-', '年')}月</div>
+                        <div class="stat-item">本月所有学员暂无上课记录</div>
+                    `;
+                }
+            } else {
+                const studentIdNum = parseInt(studentId);
+                const student = studentList.find(item => item.id === studentIdNum);
+                if (!student) {
+                    alert('学员信息不存在！');
+                    return;
+                }
+
+                const monthRecords = student.classRecords.filter(record => record.classDate.startsWith(month));
+                const courseCount = {};
+                monthRecords.forEach(record => {
+                    courseCount[record.className] = (courseCount[record.className] || 0) + 1;
+                });
+
+                html = `
+                    <div class="stat-item"><strong>学员：</strong>${student.name}（小名：${student.nickname}）(${student.phone})</div>
+                    <div class="stat-item"><strong>统计月份：</strong>${month.replace('-', '年')}月</div>
+                    <div class="stat-item"><strong>本月上课总次数：</strong>${monthRecords.length}次</div>
+                    <div class="stat-item"><strong>课程明细：</strong></div>
+                `;
+
+                if (Object.keys(courseCount).length === 0) {
+                    html += '<div class="stat-item">本月暂无上课记录</div>';
+                } else {
+                    for (const [course, count] of Object.entries(courseCount)) {
+                        html += `<div class="stat-item">- ${course}：${count}次</div>`;
+                    }
+                }
+            }
+
+            statResult.innerHTML = html;
+            statResult.style.display = 'block';
         }
     </script>
 </body>
