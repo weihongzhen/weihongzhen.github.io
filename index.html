@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>画室试听学员管理系统</title>
+    <style>
+        /* 全局样式 - 适配移动端 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding-bottom: 80px;
+            /* 给底部留空间 */
+        }
+
+        /* 头部样式 */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 18px;
+            /* 移动端字体适配 */
+            font-weight: 600;
+        }
+
+        /* 表单容器 */
+        .form-container {
+            background-color: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-title {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-left: 3px solid #e74c3c;
+            padding-left: 10px;
+        }
+
+        /* 表单项样式 */
+        .form-item {
+            margin-bottom: 15px;
+        }
+
+        .form-item label {
+            display: block;
+            font-size: 14px;
+            color: #34495e;
+            margin-bottom: 5px;
+        }
+
+        .form-item input,
+        .form-item select {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-item input:focus,
+        .form-item select:focus {
+            border-color: #3498db;
+        }
+
+        /* 标签选择样式 */
+        .tag-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+
+        .tag-item {
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .tag-item input {
+            display: none;
+        }
+
+        .tag-item label {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 0;
+        }
+
+        /* 不同标签的颜色 */
+        #tag-strong:checked+label {
+            background-color: #27ae60;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        #tag-medium:checked+label {
+            background-color: #f39c12;
+            color: white;
+            border-color: #f39c12;
+        }
+
+        #tag-none:checked+label {
+            background-color: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+
+        /* 提交按钮 */
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* 学员列表区域 */
+        .list-container {
+            background-color: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .list-title {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-left: 3px solid #3498db;
+            padding-left: 10px;
+        }
+
+        /* 查询框样式 */
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-btn {
+            padding: 0 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .reset-btn {
+            padding: 0 15px;
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* 学员卡片 */
+        .student-card {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .student-card:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .student-info {
+            font-size: 14px;
+            color: #34495e;
+            line-height: 1.6;
+        }
+
+        .student-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: white;
+            margin-top: 8px;
+        }
+
+        .tag-strong {
+            background-color: #27ae60;
+        }
+
+        .tag-medium {
+            background-color: #f39c12;
+        }
+
+        .tag-none {
+            background-color: #e74c3c;
+        }
+
+        /* 删除按钮 */
+        .delete-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 8px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* 提示信息 */
+        .tip {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .error-tip {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* 空列表提示 */
+        .empty-tip {
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 头部 -->
+    <header>
+        <h1>画室试听学员管理系统</h1>
+    </header>
+
+    <!-- 信息录入表单 -->
+    <div class="form-container">
+        <div class="form-title">试听学员信息录入</div>
+        <div class="form-item">
+            <label for="name">学员姓名 <span style="color: #e74c3c;">*</span></label>
+            <input type="text" id="name" placeholder="请输入学员姓名">
+        </div>
+        <div class="form-item">
+            <label for="phone">手机号码 <span style="color: #e74c3c;">*</span></label>
+            <input type="tel" id="phone" placeholder="请输入11位手机号码">
+            <div class="error-tip" id="phone-error">该手机号已录入，请勿重复添加</div>
+        </div>
+        <div class="form-item">
+            <label for="age">学员年龄</label>
+            <input type="number" id="age" placeholder="请输入学员年龄">
+        </div>
+        <div class="form-item">
+            <label for="gender">性别</label>
+            <select id="gender">
+                <option value="">请选择</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+        </div>
+        <div class="form-item">
+            <label for="course">试听课程 <span style="color: #e74c3c;">*</span></label>
+            <select id="course">
+                <option value="">请选择</option>
+                <option value="涂鸦">涂鸦</option>
+                <option value="感知">感知</option>
+                <option value="水粉">水粉</option>
+                <option value="素描">素描</option>
+                <option value="其他">其他</option>
+            </select>
+        </div>
+        <div class="form-item">
+            <label for="date">试听日期 <span style="color: #e74c3c;">*</span></label>
+            <input type="date" id="date">
+        </div>
+        <div class="form-item">
+            <label>交钱意愿 <span style="color: #e74c3c;">*</span></label>
+            <div class="tag-group">
+                <div class="tag-item">
+                    <input type="radio" name="tag" id="tag-strong" value="强烈">
+                    <label for="tag-strong">意愿强烈</label>
+                </div>
+                <div class="tag-item">
+                    <input type="radio" name="tag" id="tag-medium" value="中等">
+                    <label for="tag-medium">意愿中等</label>
+                </div>
+                <div class="tag-item">
+                    <input type="radio" name="tag" id="tag-none" value="不愿">
+                    <label for="tag-none">不愿交钱</label>
+                </div>
+            </div>
+        </div>
+        <button class="submit-btn" onclick="saveStudent()">提交信息</button>
+    </div>
+
+    <!-- 学员列表展示 -->
+    <div class="list-container">
+        <div class="list-title">已录入学员列表</div>
+        <!-- 新增查询框 -->
+        <div class="search-box">
+            <input type="text" class="search-input" id="search-key" placeholder="输入姓名/手机号查询">
+            <button class="search-btn" onclick="searchStudent()">查询</button>
+            <button class="reset-btn" onclick="resetSearch()">重置</button>
+        </div>
+        <div id="student-list">
+            <div class="empty-tip">暂无学员信息，请先录入</div>
+        </div>
+    </div>
+
+    <script>
+        // 从本地存储获取学员数据，没有则初始化空数组
+        let studentList = JSON.parse(localStorage.getItem('artStudioStudents')) || [];
+        // 保存原始列表，用于重置查询
+        let originalStudentList = [...studentList];
+
+        // 页面加载时渲染学员列表
+        window.onload = function () {
+            renderStudentList();
+        };
+
+        // 保存学员信息
+        function saveStudent() {
+            // 获取表单数据
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const age = document.getElementById('age').value.trim();
+            const gender = document.getElementById('gender').value;
+            const course = document.getElementById('course').value;
+            const date = document.getElementById('date').value;
+            const tag = document.querySelector('input[name="tag"]:checked')?.value;
+
+            // 校验必填项
+            if (!name) {
+                alert('请输入学员姓名！');
+                return;
+            }
+            if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
+                alert('请输入有效的11位手机号码！');
+                return;
+            }
+            if (!course) {
+                alert('请选择试听课程！');
+                return;
+            }
+            if (!date) {
+                alert('请选择试听日期！');
+                return;
+            }
+            if (!tag) {
+                alert('请选择交钱意愿标签！');
+                return;
+            }
+
+            // 校验手机号是否重复（核心防重复逻辑）
+            const isRepeat = studentList.some(item => item.phone === phone);
+            if (isRepeat) {
+                document.getElementById('phone-error').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('phone-error').style.display = 'none';
+            }
+
+            // 构造学员对象
+            const student = {
+                id: Date.now(), // 用时间戳作为唯一ID
+                name,
+                phone,
+                age: age || '未填写',
+                gender: gender || '未填写',
+                course,
+                date,
+                tag
+            };
+
+            // 添加到列表并保存到本地存储
+            studentList.push(student);
+            originalStudentList = [...studentList]; // 更新原始列表
+            localStorage.setItem('artStudioStudents', JSON.stringify(studentList));
+
+            // 重新渲染列表
+            renderStudentList();
+
+            // 重置表单
+            document.querySelectorAll('.form-item input, .form-item select').forEach(el => {
+                if (el.type === 'radio') el.checked = false;
+                else el.value = '';
+            });
+
+            alert('学员信息录入成功！');
+        }
+
+        // 渲染学员列表
+        function renderStudentList(list = studentList) {
+            const listEl = document.getElementById('student-list');
+
+            // 无数据时显示提示
+            if (list.length === 0) {
+                listEl.innerHTML = '<div class="empty-tip">暂无匹配的学员信息</div>';
+                return;
+            }
+
+            // 拼接学员卡片HTML（新增删除按钮）
+            let html = '';
+            list.forEach(student => {
+                // 根据标签设置不同的样式类
+                let tagClass = '';
+                if (student.tag === '强烈') tagClass = 'tag-strong';
+                else if (student.tag === '中等') tagClass = 'tag-medium';
+                else tagClass = 'tag-none';
+
+                html += `
+                    <div class="student-card" data-id="${student.id}">
+                        <button class="delete-btn" onclick="deleteStudent(${student.id})">删除</button>
+                        <div class="student-info">
+                            <p><strong>姓名：</strong>${student.name}</p>
+                            <p><strong>手机号：</strong>${student.phone}</p>
+                            <p><strong>年龄/性别：</strong>${student.age}/${student.gender}</p>
+                            <p><strong>试听课程：</strong>${student.course}</p>
+                            <p><strong>试听日期：</strong>${student.date}</p>
+                            <span class="student-tag ${tagClass}">交钱意愿：${student.tag}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            listEl.innerHTML = html;
+        }
+
+        // 新增：查询学员功能
+        function searchStudent() {
+            const key = document.getElementById('search-key').value.trim().toLowerCase();
+            if (!key) {
+                alert('请输入查询关键词（姓名/手机号）！');
+                return;
+            }
+            // 按姓名或手机号模糊匹配
+            const filteredList = originalStudentList.filter(student =>
+                student.name.toLowerCase().includes(key) ||
+                student.phone.includes(key)
+            );
+            // 渲染筛选后的列表
+            renderStudentList(filteredList);
+        }
+
+        // 新增：重置查询（恢复全部列表）
+        function resetSearch() {
+            document.getElementById('search-key').value = '';
+            renderStudentList(originalStudentList);
+        }
+
+        // 新增：删除学员功能
+        function deleteStudent(studentId) {
+            // 二次确认，防止误删
+            if (!confirm('确定要删除该学员信息吗？删除后无法恢复！')) {
+                return;
+            }
+            // 过滤掉要删除的学员
+            studentList = studentList.filter(student => student.id !== studentId);
+            originalStudentList = [...studentList]; // 更新原始列表
+            // 保存到本地存储
+            localStorage.setItem('artStudioStudents', JSON.stringify(studentList));
+            // 重新渲染列表
+            renderStudentList();
+            alert('学员信息已删除！');
+        }
+    </script>
+</body>
+
+</html>
