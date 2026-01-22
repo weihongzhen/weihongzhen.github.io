@@ -100,8 +100,9 @@
             background-color: #8e44ad;
         }
 
-        /* 表单弹窗样式 */
-        .modal {
+        /* 表单弹窗样式（统一所有弹窗样式） */
+        .modal,
+        .class-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -171,16 +172,6 @@
         .form-item input:focus,
         .form-item select:focus {
             border-color: #3498db;
-        }
-
-        /* 自定义课程类型输入框样式 */
-        .course-input {
-            width: 100%;
-            padding: 12px 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
         }
 
         /* 提交按钮 */
@@ -628,21 +619,20 @@
                     <option value="女">女</option>
                 </select>
             </div>
-            <!-- 动态课程类型输入框 -->
+            <!-- 修改：课程从输入框改为下拉选择框，禁止自定义 -->
             <div class="form-item">
                 <label for="course">课程类型 <span style="color: #e74c3c;">*</span></label>
-                <input list="course-options" type="text" id="course" class="course-input"
-                    placeholder="输入课程类型（可选择预设/自定义）">
-                <datalist id="course-options">
-                    <!-- 动态生成预设选项 -->
-                </datalist>
-                <div class="tip">提示：可直接输入自定义课程类型，也可选择下拉预设选项</div>
+                <select id="course" class="course-select">
+                    <option value="">请选择课程类型</option>
+                    <!-- 动态加载预设课程 -->
+                </select>
+                <div class="tip">提示：仅可选择预设课程，如需新增课程请前往「课程预设管理」</div>
             </div>
             <button class="submit-btn" onclick="saveStudent()">提交信息</button>
         </div>
     </div>
 
-    <!-- 上课记录弹窗 -->
+    <!-- 上课记录弹窗（修复样式，课程改为下拉选择框） -->
     <div class="class-modal" id="class-modal">
         <div class="modal-content" style="position: relative;">
             <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -652,28 +642,27 @@
                 <label for="class-date">上课日期 <span style="color: #e74c3c;">*</span></label>
                 <input type="date" id="class-date">
             </div>
-            <!-- 动态上课课程输入框 -->
+            <!-- 修改：上课课程从输入框改为下拉选择框，禁止自定义 -->
             <div class="form-item">
                 <label for="class-name">上课课程 <span style="color: #e74c3c;">*</span></label>
-                <input list="class-options" type="text" id="class-name" class="course-input"
-                    placeholder="输入上课课程（可选择预设/自定义）">
-                <datalist id="class-options">
-                    <!-- 动态生成预设选项 -->
-                </datalist>
-                <div class="tip">提示：可直接输入自定义课程名称，也可选择下拉预设选项</div>
+                <select id="class-name" class="course-select">
+                    <option value="">请选择上课课程</option>
+                    <!-- 动态加载预设课程 -->
+                </select>
+                <div class="tip">提示：仅可选择预设课程，如需新增课程请前往「课程预设管理」</div>
             </div>
             <button class="confirm-btn submit-btn" onclick="saveClassRecord()">确认添加</button>
         </div>
     </div>
 
-    <!-- 课程预设管理弹窗 -->
+    <!-- 课程预设管理弹窗（保留自定义功能） -->
     <div class="modal" id="course-setting-modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeCourseSettingModal()">&times;</span>
             <div class="modal-title">课程预设管理（增删改）</div>
             <div class="form-item">
                 <label for="new-course-name">新增/修改课程名称</label>
-                <input type="text" id="new-course-name" placeholder="输入课程名称（如：少儿彩铅）">
+                <input type="text" id="new-course-name" placeholder="输入课程名称（如：少儿感知）">
                 <input type="hidden" id="edit-course-index" value="-1">
             </div>
             <div style="display: flex; gap: 10px;">
@@ -707,23 +696,31 @@
             renderStudentList(); // 渲染学员列表（带分页）
             initStatOptions();
             renderCoursePreset(); // 渲染课程预设到下拉框和管理列表
+            renderCourseSelects(); // 初始化学员录入/上课记录的课程下拉框
             renderPagination(); // 渲染分页控件
         };
 
-        // ---------------------- 课程预设管理核心功能 ----------------------
-        // 渲染课程预设到下拉框和管理列表
-        function renderCoursePreset() {
-            const courseOptions = document.getElementById('course-options');
-            const classOptions = document.getElementById('class-options');
-            const courseList = document.getElementById('course-list');
+        // ---------------------- 新增：渲染课程下拉选择框（学员录入/上课记录） ----------------------
+        function renderCourseSelects() {
+            // 学员录入/修改的课程下拉框
+            const courseSelect = document.getElementById('course');
+            // 上课记录的课程下拉框
+            const classNameSelect = document.getElementById('class-name');
 
-            // 渲染下拉框选项
-            courseOptions.innerHTML = '';
-            classOptions.innerHTML = '';
+            // 清空并重新渲染
+            courseSelect.innerHTML = '<option value="">请选择课程类型</option>';
+            classNameSelect.innerHTML = '<option value="">请选择上课课程</option>';
+
             coursePresetList.forEach(course => {
-                courseOptions.innerHTML += `<option value="${course}"></option>`;
-                classOptions.innerHTML += `<option value="${course}"></option>`;
+                courseSelect.innerHTML += `<option value="${course}">${course}</option>`;
+                classNameSelect.innerHTML += `<option value="${course}">${course}</option>`;
             });
+        }
+
+        // ---------------------- 课程预设管理核心功能 ----------------------
+        // 渲染课程预设到管理列表和筛选框
+        function renderCoursePreset() {
+            const courseList = document.getElementById('course-list');
 
             // 渲染管理列表
             if (coursePresetList.length === 0) {
@@ -747,8 +744,9 @@
 
             // 保存到本地存储
             localStorage.setItem('coursePresetList', JSON.stringify(coursePresetList));
-            // 同步更新课程筛选下拉框
+            // 同步更新所有课程下拉框（筛选框、学员录入、上课记录）
             initCourseFilter();
+            renderCourseSelects();
         }
 
         // 打开课程预设管理弹窗
@@ -825,6 +823,8 @@
             document.querySelectorAll('.form-item input, .form-item select').forEach(el => {
                 el.value = '';
             });
+            // 重新渲染课程下拉框（确保最新）
+            renderCourseSelects();
             document.getElementById('add-student-modal').style.display = 'flex';
         }
 
@@ -840,6 +840,9 @@
                 alert('学员信息不存在！');
                 return;
             }
+
+            // 重新渲染课程下拉框（确保最新）
+            renderCourseSelects();
 
             // 回显数据到表单
             document.getElementById('name').value = student.name;
@@ -866,7 +869,7 @@
             const phone = document.getElementById('phone').value.trim();
             const age = document.getElementById('age').value.trim();
             const gender = document.getElementById('gender').value;
-            const course = document.getElementById('course').value.trim();
+            const course = document.getElementById('course').value; // 改为下拉框的值
 
             // 基础校验
             if (!name) {
@@ -877,8 +880,8 @@
                 alert('请输入有效的11位手机号码！');
                 return;
             }
-            if (!course) {
-                alert('请输入课程类型！');
+            if (!course) { // 校验下拉框是否选择
+                alert('请选择课程类型！');
                 return;
             }
 
@@ -1183,10 +1186,12 @@
             alert('所有数据已清除！');
         }
 
-        // ---------------------- 上课记录管理 ----------------------
+        // ---------------------- 上课记录管理（弹窗优化+课程限制） ----------------------
         // 打开上课记录弹窗
         function openClassModal(studentId) {
             document.getElementById('current-student-id').value = studentId;
+            // 重新渲染课程下拉框（确保最新）
+            renderCourseSelects();
             document.getElementById('class-modal').style.display = 'flex';
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('class-date').value = today;
@@ -1203,14 +1208,14 @@
         function saveClassRecord() {
             const studentId = parseInt(document.getElementById('current-student-id').value);
             const classDate = document.getElementById('class-date').value;
-            const className = document.getElementById('class-name').value.trim();
+            const className = document.getElementById('class-name').value; // 改为下拉框的值
 
             if (!classDate) {
                 alert('请选择上课日期！');
                 return;
             }
-            if (!className) {
-                alert('请输入上课课程！');
+            if (!className) { // 校验下拉框是否选择
+                alert('请选择上课课程！');
                 return;
             }
 
