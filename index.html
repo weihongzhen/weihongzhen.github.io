@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>画室试听学员管理系统</title>
+    <title>雪梨老师专属学员管理系统</title>
     <style>
         /* 全局样式 - 适配移动端 */
         * {
@@ -219,15 +219,17 @@
             padding-left: 10px;
         }
 
-        /* 查询框样式 */
-        .search-box {
+        /* 筛选栏样式（新增：搜索+筛选+排序） */
+        .filter-bar {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 15px;
         }
 
         .search-input {
             flex: 1;
+            min-width: 200px;
             padding: 12px 10px;
             border: 1px solid #ddd;
             border-radius: 6px;
@@ -235,7 +237,16 @@
             outline: none;
         }
 
-        .search-btn {
+        .filter-select {
+            padding: 12px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            min-width: 120px;
+        }
+
+        .filter-btn {
             padding: 0 15px;
             background-color: #3498db;
             color: white;
@@ -253,12 +264,14 @@
             cursor: pointer;
         }
 
-        /* 学员卡片 */
+        /* 学员卡片（优化：折叠/展开） */
         .student-card {
             padding: 15px;
             border-bottom: 1px solid #f0f0f0;
             margin-bottom: 10px;
             position: relative;
+            border-radius: 6px;
+            background-color: #fafafa;
         }
 
         .student-card:last-child {
@@ -266,24 +279,54 @@
             margin-bottom: 0;
         }
 
-        .student-info {
+        /* 卡片头部（核心信息，默认显示） */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .card-main-info {
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .expand-btn {
+            font-size: 12px;
+            color: #3498db;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 2px 5px;
+        }
+
+        /* 卡片详情（默认隐藏） */
+        .card-detail {
             font-size: 14px;
             color: #34495e;
             line-height: 1.6;
+            display: none;
+            padding-top: 8px;
+            border-top: 1px dashed #eee;
         }
 
-        /* 操作按钮组 */
+        /* 展开状态 */
+        .card-detail.show {
+            display: block;
+        }
+
+        /* 操作按钮组（优化：缩小按钮，更紧凑） */
         .action-btns {
             display: flex;
             gap: 8px;
             margin-top: 10px;
         }
 
-        /* 删除按钮 - 优化样式更醒目 */
+        .edit-student-btn,
+        .add-class-btn,
         .delete-btn {
-            padding: 6px 10px;
-            background-color: #e74c3c;
-            color: white;
+            padding: 4px 8px;
             border: none;
             border-radius: 4px;
             font-size: 12px;
@@ -292,63 +335,37 @@
             font-weight: 600;
         }
 
-        .delete-btn:hover {
-            background-color: #c0392b;
-        }
-
-        /* 添加上课记录按钮 */
-        .add-class-btn {
-            padding: 6px 10px;
-            background-color: #27ae60;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-            flex: 1;
-            font-weight: 600;
-        }
-
-        .add-class-btn:hover {
-            background-color: #219653;
-        }
-
-        /* 新增：修改学员信息按钮 */
         .edit-student-btn {
-            padding: 6px 10px;
             background-color: #f39c12;
             color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-            flex: 1;
-            font-weight: 600;
         }
 
         .edit-student-btn:hover {
             background-color: #e67e22;
         }
 
-        /* 上课记录弹窗 */
-        .class-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-            padding: 20px;
+        .add-class-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .add-class-btn:hover {
+            background-color: #219653;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
         }
 
         /* 上课记录展示 */
         .class-records {
-            margin-top: 10px;
-            padding-top: 10px;
+            margin-top: 8px;
+            padding-top: 8px;
             border-top: 1px dashed #ddd;
         }
 
@@ -359,6 +376,38 @@
             padding: 5px;
             background-color: #f8f9fa;
             border-radius: 4px;
+        }
+
+        /* 分页样式（新增） */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            color: #3498db;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .page-btn.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .page-btn:disabled {
+            color: #999;
+            cursor: not-allowed;
+            background-color: #f5f5f5;
         }
 
         /* 统计区域 */
@@ -480,6 +529,12 @@
             font-size: 14px;
             padding: 20px 0;
         }
+
+        /* 高亮匹配文本（新增） */
+        .highlight {
+            color: #e74c3c;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -496,17 +551,33 @@
         <button class="course-setting-btn" onclick="openCourseSettingModal()">课程预设管理</button>
     </div>
 
-    <!-- 学员列表展示 -->
+    <!-- 学员列表展示（优化：新增筛选栏、分页） -->
     <div class="list-container">
         <div class="list-title">已录入学员列表</div>
-        <!-- 查询框 -->
-        <div class="search-box">
-            <input type="text" class="search-input" id="search-key" placeholder="输入姓名/小名/手机号查询">
-            <button class="search-btn" onclick="searchStudent()">查询</button>
-            <button class="reset-btn" onclick="resetSearch()">重置</button>
+        <!-- 筛选栏（搜索+课程筛选+性别筛选+排序） -->
+        <div class="filter-bar">
+            <input type="text" class="search-input" id="search-key" placeholder="输入姓名/小名/手机号查询（实时匹配）"
+                oninput="realTimeSearch()">
+            <select class="filter-select" id="course-filter" onchange="filterStudentList()">
+                <option value="">所有课程</option>
+            </select>
+            <select class="filter-select" id="gender-filter" onchange="filterStudentList()">
+                <option value="">所有性别</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+            <select class="filter-select" id="sort-type" onchange="filterStudentList()">
+                <option value="createTimeDesc">按录入时间（新→旧）</option>
+                <option value="createTimeAsc">按录入时间（旧→新）</option>
+                <option value="nameAsc">按姓名（A→Z）</option>
+            </select>
+            <button class="reset-btn" onclick="resetAllFilter()">重置筛选</button>
         </div>
         <div id="student-list">
             <div class="empty-tip">暂无学员信息，请先录入</div>
+        </div>
+        <!-- 分页控件 -->
+        <div class="pagination" id="pagination">
         </div>
     </div>
 
@@ -531,7 +602,7 @@
         <div class="modal-content">
             <span class="close-modal" onclick="closeAddStudentModal()">&times;</span>
             <div class="modal-title" id="student-modal-title">学员信息录入</div>
-            <!-- 新增：存储当前修改的学员ID -->
+            <!-- 存储当前修改的学员ID -->
             <input type="hidden" id="edit-student-id" value="-1">
             <div class="form-item">
                 <label for="name">学员姓名 <span style="color: #e74c3c;">*</span></label>
@@ -602,7 +673,7 @@
             <div class="modal-title">课程预设管理（增删改）</div>
             <div class="form-item">
                 <label for="new-course-name">新增/修改课程名称</label>
-                <input type="text" id="new-course-name" placeholder="输入课程名称（如：少儿涂鸦）">
+                <input type="text" id="new-course-name" placeholder="输入课程名称（如：少儿彩铅）">
                 <input type="hidden" id="edit-course-index" value="-1">
             </div>
             <div style="display: flex; gap: 10px;">
@@ -621,15 +692,22 @@
     <script>
         // 从本地存储获取数据
         let studentList = JSON.parse(localStorage.getItem('artStudioStudents')) || [];
-        let coursePresetList = JSON.parse(localStorage.getItem('coursePresetList')) || ['涂鸦', '感知', '其他'];
-        let originalStudentList = [...studentList];
+        let coursePresetList = JSON.parse(localStorage.getItem('coursePresetList')) || ['感知', '涂鸦', '其他'];
+        let originalStudentList = [...studentList]; // 原始数据
+        let filteredStudentList = [...studentList]; // 筛选后数据
         let editCourseIndex = -1; // 编辑课程的索引，-1表示新增
+
+        // 分页配置（核心：解决长列表问题）
+        const PAGE_SIZE = 10; // 每页显示10条，可根据需要调整
+        let currentPage = 1; // 当前页码
 
         // 页面加载初始化
         window.onload = function () {
-            renderStudentList();
+            initCourseFilter(); // 初始化课程筛选下拉框
+            renderStudentList(); // 渲染学员列表（带分页）
             initStatOptions();
             renderCoursePreset(); // 渲染课程预设到下拉框和管理列表
+            renderPagination(); // 渲染分页控件
         };
 
         // ---------------------- 课程预设管理核心功能 ----------------------
@@ -669,6 +747,8 @@
 
             // 保存到本地存储
             localStorage.setItem('coursePresetList', JSON.stringify(coursePresetList));
+            // 同步更新课程筛选下拉框
+            initCourseFilter();
         }
 
         // 打开课程预设管理弹窗
@@ -748,7 +828,7 @@
             document.getElementById('add-student-modal').style.display = 'flex';
         }
 
-        // 新增：打开修改学员弹窗
+        // 打开修改学员弹窗
         function openEditStudentModal(studentId) {
             // 设置弹窗状态为「修改」
             document.getElementById('student-modal-title').innerText = '修改学员信息';
@@ -803,9 +883,10 @@
             }
 
             if (editStudentId === -1) {
-                // 新增学员逻辑
+                // 新增学员逻辑（添加录入时间，用于排序）
                 const student = {
                     id: Date.now(),
+                    createTime: Date.now(), // 录入时间戳
                     name,
                     nickname: nickname || '未填写',
                     phone,
@@ -825,7 +906,7 @@
                     return;
                 }
 
-                // 保留原有上课记录，更新基础信息
+                // 保留原有上课记录和录入时间，更新基础信息
                 studentList[studentIndex] = {
                     ...studentList[studentIndex],
                     name,
@@ -840,22 +921,128 @@
 
             // 同步数据并刷新页面
             originalStudentList = [...studentList];
+            filteredStudentList = [...studentList];
             localStorage.setItem('artStudioStudents', JSON.stringify(studentList));
+            currentPage = 1; // 新增/修改后回到第一页
             renderStudentList();
             initStatOptions();
+            renderPagination();
             closeAddStudentModal();
         }
 
-        // 渲染学员列表（新增修改按钮）
-        function renderStudentList(list = studentList) {
+        // ---------------------- 学员列表优化：筛选+分页+折叠 ----------------------
+        // 初始化课程筛选下拉框
+        function initCourseFilter() {
+            const courseFilter = document.getElementById('course-filter');
+            // 先清空，保留「所有课程」选项
+            courseFilter.innerHTML = '<option value="">所有课程</option>';
+            // 获取所有已录入的课程类型（去重）
+            const allCourses = [...new Set(studentList.map(s => s.course))];
+            // 合并预设课程和已录入课程，去重
+            const allUniqueCourses = [...new Set([...coursePresetList, ...allCourses])];
+            // 渲染选项
+            allUniqueCourses.forEach(course => {
+                courseFilter.innerHTML += `<option value="${course}">${course}</option>`;
+            });
+        }
+
+        // 实时搜索（输入时自动匹配）
+        function realTimeSearch() {
+            filterStudentList();
+        }
+
+        // 筛选学员列表（搜索+课程+性别）
+        function filterStudentList() {
+            const key = document.getElementById('search-key').value.trim().toLowerCase();
+            const courseFilter = document.getElementById('course-filter').value;
+            const genderFilter = document.getElementById('gender-filter').value;
+            const sortType = document.getElementById('sort-type').value;
+
+            // 第一步：基础筛选（搜索+课程+性别）
+            filteredStudentList = originalStudentList.filter(student => {
+                // 搜索匹配
+                const matchSearch = !key ||
+                    student.name.toLowerCase().includes(key) ||
+                    student.nickname.toLowerCase().includes(key) ||
+                    student.phone.includes(key);
+                // 课程匹配
+                const matchCourse = !courseFilter || student.course === courseFilter;
+                // 性别匹配
+                const matchGender = !genderFilter || student.gender === genderFilter;
+
+                return matchSearch && matchCourse && matchGender;
+            });
+
+            // 第二步：排序
+            switch (sortType) {
+                case 'createTimeDesc':
+                    // 按录入时间从新到旧
+                    filteredStudentList.sort((a, b) => b.createTime - a.createTime);
+                    break;
+                case 'createTimeAsc':
+                    // 按录入时间从旧到新
+                    filteredStudentList.sort((a, b) => a.createTime - b.createTime);
+                    break;
+                case 'nameAsc':
+                    // 按姓名拼音排序（中文）
+                    filteredStudentList.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'));
+                    break;
+            }
+
+            // 重置页码到第一页
+            currentPage = 1;
+            // 重新渲染列表和分页
+            renderStudentList();
+            renderPagination();
+        }
+
+        // 重置所有筛选条件
+        function resetAllFilter() {
+            document.getElementById('search-key').value = '';
+            document.getElementById('course-filter').value = '';
+            document.getElementById('gender-filter').value = '';
+            document.getElementById('sort-type').value = 'createTimeDesc';
+            // 恢复原始数据
+            filteredStudentList = [...originalStudentList];
+            currentPage = 1;
+            renderStudentList();
+            renderPagination();
+        }
+
+        // 渲染学员列表（带分页+折叠+高亮）
+        function renderStudentList() {
             const listEl = document.getElementById('student-list');
-            if (list.length === 0) {
+            const key = document.getElementById('search-key').value.trim().toLowerCase();
+
+            // 计算分页数据
+            const startIndex = (currentPage - 1) * PAGE_SIZE;
+            const endIndex = startIndex + PAGE_SIZE;
+            const currentPageList = filteredStudentList.slice(startIndex, endIndex);
+
+            if (filteredStudentList.length === 0) {
                 listEl.innerHTML = '<div class="empty-tip">暂无匹配的学员信息</div>';
                 return;
             }
 
+            if (currentPageList.length === 0) {
+                listEl.innerHTML = '<div class="empty-tip">当前页暂无数据</div>';
+                return;
+            }
+
             let html = '';
-            list.forEach(student => {
+            currentPageList.forEach(student => {
+                // 高亮匹配的文本
+                let showName = student.name;
+                let showNickname = student.nickname;
+                let showPhone = student.phone;
+                if (key) {
+                    const reg = new RegExp(key, 'gi');
+                    showName = student.name.replace(reg, match => `<span class="highlight">${match}</span>`);
+                    showNickname = student.nickname.replace(reg, match => `<span class="highlight">${match}</span>`);
+                    showPhone = student.phone.replace(reg, match => `<span class="highlight">${match}</span>`);
+                }
+
+                // 上课记录HTML
                 let recordsHtml = '';
                 if (student.classRecords && student.classRecords.length > 0) {
                     recordsHtml = `
@@ -870,12 +1057,19 @@
                     `;
                 }
 
+                // 卡片HTML（折叠/展开）
                 html += `
                     <div class="student-card" data-id="${student.id}">
-                        <div class="student-info">
-                            <p><strong>姓名：</strong>${student.name}</p>
-                            <p><strong>小名：</strong>${student.nickname}</p>
-                            <p><strong>手机号：</strong>${student.phone}</p>
+                        <!-- 卡片头部（核心信息，默认显示） -->
+                        <div class="card-header">
+                            <div class="card-main-info">
+                                <strong>姓名：</strong>${showName}（<strong>手机号：</strong>${showPhone}）
+                            </div>
+                            <button class="expand-btn" onclick="toggleCardDetail(${student.id})">展开 ▼</button>
+                        </div>
+                        <!-- 卡片详情（默认隐藏） -->
+                        <div class="card-detail" id="detail-${student.id}">
+                            <p><strong>小名：</strong>${showNickname}</p>
                             <p><strong>年龄/性别：</strong>${student.age}/${student.gender}</p>
                             <p><strong>课程类型：</strong>${student.course}</p>
                             ${recordsHtml}
@@ -889,6 +1083,64 @@
                 `;
             });
             listEl.innerHTML = html;
+        }
+
+        // 折叠/展开卡片详情
+        function toggleCardDetail(studentId) {
+            const detailEl = document.getElementById(`detail-${studentId}`);
+            const expandBtn = detailEl.parentElement.querySelector('.expand-btn');
+            if (detailEl.classList.contains('show')) {
+                detailEl.classList.remove('show');
+                expandBtn.innerText = '展开 ▼';
+            } else {
+                detailEl.classList.add('show');
+                expandBtn.innerText = '收起 ▲';
+            }
+        }
+
+        // 渲染分页控件
+        function renderPagination() {
+            const paginationEl = document.getElementById('pagination');
+            const totalCount = filteredStudentList.length;
+            const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+
+            // 无数据时隐藏分页
+            if (totalCount === 0) {
+                paginationEl.innerHTML = '';
+                return;
+            }
+
+            let paginationHtml = '';
+            // 上一页按钮
+            paginationHtml += `<button class="page-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>上一页</button>`;
+
+            // 页码按钮（最多显示5个页码）
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, currentPage + 2);
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHtml += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // 下一页按钮
+            paginationHtml += `<button class="page-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>下一页</button>`;
+
+            // 页码信息
+            paginationHtml += `<span style="font-size:14px;color:#666;margin-left:10px;">
+                共${totalCount}条 / ${totalPages}页
+            </span>`;
+
+            paginationEl.innerHTML = paginationHtml;
+        }
+
+        // 切换页码
+        function changePage(pageNum) {
+            const totalPages = Math.ceil(filteredStudentList.length / PAGE_SIZE);
+            if (pageNum < 1 || pageNum > totalPages) return;
+            currentPage = pageNum;
+            renderStudentList();
+            renderPagination();
+            // 滚动到列表顶部
+            document.getElementById('student-list').scrollIntoView({ behavior: 'smooth' });
         }
 
         // 删除指定学员
@@ -905,9 +1157,13 @@
 
             studentList = studentList.filter(student => student.id !== studentId);
             originalStudentList = [...studentList];
+            filteredStudentList = [...studentList];
             localStorage.setItem('artStudioStudents', JSON.stringify(studentList));
+
+            // 重新渲染
             renderStudentList();
             initStatOptions();
+            renderPagination();
             alert(`学员【${student.name}】信息已删除！`);
         }
 
@@ -918,33 +1174,16 @@
 
             studentList = [];
             originalStudentList = [];
+            filteredStudentList = [];
             localStorage.removeItem('artStudioStudents');
+            currentPage = 1;
             renderStudentList();
             initStatOptions();
+            renderPagination();
             alert('所有数据已清除！');
         }
 
-        // 搜索学员
-        function searchStudent() {
-            const key = document.getElementById('search-key').value.trim().toLowerCase();
-            if (!key) {
-                alert('请输入查询关键词！');
-                return;
-            }
-            const filteredList = originalStudentList.filter(student =>
-                student.name.toLowerCase().includes(key) ||
-                student.nickname.toLowerCase().includes(key) ||
-                student.phone.includes(key)
-            );
-            renderStudentList(filteredList);
-        }
-
-        // 重置搜索
-        function resetSearch() {
-            document.getElementById('search-key').value = '';
-            renderStudentList(originalStudentList);
-        }
-
+        // ---------------------- 上课记录管理 ----------------------
         // 打开上课记录弹窗
         function openClassModal(studentId) {
             document.getElementById('current-student-id').value = studentId;
@@ -990,12 +1229,15 @@
 
             localStorage.setItem('artStudioStudents', JSON.stringify(studentList));
             originalStudentList = [...studentList];
+            filteredStudentList = [...studentList];
             renderStudentList();
             initStatOptions();
+            renderPagination();
             closeModal();
             alert('上课记录添加成功！');
         }
 
+        // ---------------------- 统计功能 ----------------------
         // 初始化统计下拉选项
         function initStatOptions() {
             const studentSelect = document.getElementById('stat-student');
